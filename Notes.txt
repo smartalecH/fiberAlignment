@@ -1,0 +1,84 @@
+Functions removed (blame Sequoia):
+
+FROM sampleGUI.py: 
+def up1():
+    step = float(app.txtStepVal1.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepUp(step, 1)
+def up2():
+    step = float(app.txtStepVal2.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepUp(step, 2)
+def up3():
+    step = float(app.txtStepVal3.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepUp(step, 3)
+def down1():
+    step = float(app.txtStepVal1.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepDown(step, 1)
+def down2():
+    step = float(app.txtStepVal2.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepDown(step, 2)
+def down3():
+    step = float(app.txtStepVal3.get())
+    if step > 7.5: step = 7.5
+    elif step <.005: step = .005
+    gf.stepDown(step, 3)
+
+# The Zeroing functions, replaced by zero(channel)
+def zero1():
+    gf.zero1()
+    app.btnZeroed1.config(bg="#1cb251")
+def zero2():
+    gf.zero2()
+    app.btnZeroed2.config(state="normal")
+def zero3():
+    gf.zero3()
+    app.btnZeroed3.config(state="normal")
+	
+FROM GuiFunctions.py
+# The below commented out code now seems unnecessary, as the openLoop and closedLoop
+# functions can handle what all six below do just fine.
+def openLoop1():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel1, ct.c_short(1))
+def openLoop2():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel2, ct.c_short(1))
+def openLoop3():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel3, ct.c_short(1))
+def closeLoop1():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel1, ct.c_short(2))
+def closeLoop2():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel2, ct.c_short(2))
+def closeLoop3():
+    #(serialno, channel, control mode 1==open, 2==closed)
+    piezoDll.PBC_SetPositionControlMode(serialNumber, channel3, ct.c_short(2))
+
+# The below code, obsolete by the identify function.
+def identify1():
+    #(serialno, channel)
+    piezoDll.PBC_Identify(serialNumber, channel1)
+def identify2():
+    #(serialno, channel)
+    piezoDll.PBC_Identify(serialNumber, channel2)
+def identify3():
+    #(serialno, channel)
+    piezoDll.PBC_Identify(serialNumber, channel3)
+
+def zero1():
+    piezoDll.PBC_SetZero(serialNumber, channel1)
+def zero2():
+    piezoDll.PBC_SetZero(serialNumber, channel2)
+def zero3():
+    piezoDll.PBC_SetZero(serialNumber, channel3)
