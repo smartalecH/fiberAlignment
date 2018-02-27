@@ -114,6 +114,15 @@ def probability3d():
                 ax.scatter3D(xlist[x], ylist[y], zlist[z], marker="o", c='r')#, markersize=intensity)
 
     plt.show()
+	
+def J(x):
+	# Channel 1 = x
+	# Channel 2 = y
+	# Channel 3 = z
+	gf.setPosition(x[0],1)
+	gf.setPosition(x[1],3)
+	sleep(0.1)
+	return getAverage()
 
 if __name__ == "__main__":
     #ani = animation.FuncAnimation(fig, animate, interval=20)
