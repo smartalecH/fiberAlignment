@@ -6,6 +6,10 @@ from scipy.optimize import minimize
 
 
 def sphere(x):
+    print x[0]
+    print x[1]
+    print x[2]
+    print ""
     return sum((x[0:])**2.0)
 def rosen(x):
     return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)

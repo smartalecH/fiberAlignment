@@ -3,9 +3,11 @@ import numpy
 from time import sleep
 import os
 serialNumber = ct.c_char_p('71874833')
+#adds location of the dlls to the system path so that this program can run on any machine
 dir_path = os.path.dirname(os.path.realpath(__file__))
 dll_location = dir_path + "\\dll"
 os.environ['PATH'] = dll_location + os.pathsep + os.environ['PATH']
+#import piezo controller dll
 piezoDll = ct.CDLL("Thorlabs.MotionControl.Benchtop.Piezo.dll")
 hundredPercent = 32767
 channel1 = ct.c_short(1)
@@ -53,6 +55,7 @@ def disconnect():
 #           channel: number 1-n representing the channel to change
 # Returns: None
 def stepUp(step, channel):
+    if step <.005: step = .005
     positionb = getPosition()[channel - 1]
     position = getPosition()[channel - 1] + step
     setPosition(position, channel)
@@ -63,6 +66,7 @@ def stepUp(step, channel):
 #           channel: number 1-n representing the channel to change
 # Returns: None
 def stepDown(step, channel):
+    if step <.005: step = .005
     position = getPosition()[channel - 1] - step
     setPosition(position, channel)
 
@@ -121,6 +125,8 @@ def getPosition():
 # Parameters: position_um (float, position in micrometers), channel (int, 1 to n).
 # Returns: None
 def setPosition(position_um, channel):
+    if position_um < 0:position_um = 0
+        print "error: position < 0"
     inputShort = calculateDistanceShort(position_um, channel)
     if inputShort > hundredPercent: inputShort = hundredPercent
     inputShort = ct.c_short(inputShort)

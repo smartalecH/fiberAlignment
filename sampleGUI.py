@@ -239,8 +239,6 @@ def closeMode(channel):
 # Notes: This function has been tested and properly calls gf.stepUp
 def up(step, channel):
     step = float(step)
-    if step > 7.5: step = 7.5
-    elif step <.005: step = .005
     gf.stepUp(step, channel)
 
 # Function: down
@@ -251,8 +249,6 @@ def up(step, channel):
 # Notes: This function has been tested and properly calls gf.stepDown
 def down(step, channel):
     step = float(step)
-    if step > 4.5: step = 7.5
-    elif step <.005: step = .005
     gf.stepDown(step, channel)
 
 # Function: zero
