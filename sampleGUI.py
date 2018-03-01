@@ -295,7 +295,7 @@ def animate(i):
     x = np.array(np.linspace(0,100,100))
     y = np.array(daq.get100data()) * 1000
     # Get the average value
-    avg = np.mean(y)
+    avg = np.mean(y) / 43
     z = np.full((100,1), avg)
     # Clear the figure, and plot the new data
     app.ax1.cla()
@@ -306,7 +306,7 @@ def animate(i):
     app.ax1.set_ylabel('Voltage (mv)')
     app.ax1.set_xlabel('Measurement #')
     app.ax1.set_title("DAQ Real-Time Measurements")
-    app.ax1.legend(['Measured voltage','Average = ' + str('{:.2f}'.format(avg)) + ' mV'], loc='upper left', bbox_to_anchor=(0.5,1))
+    app.ax1.legend(['Measured voltage','Average = ' + str('{:.2f}'.format(avg)) + ' %'], loc='upper left', bbox_to_anchor=(0.5,1))
 
 # Function: setTarget1/2/3
 # Purpose: gets the position inputted into the "target" text box and sets the motor's position.

@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 x0 = numpy.array([10,10])
 gf.connect()
 sleep(3) # Gives piezo enough time to initialize
-res = minimize(daq.J, x0, method='nelder-mead', options={'xatol': 0.2, 'fatol': 0.2, 'disp': True})
+res = minimize(daq.J, x0, method='nelder-mead', options={'xatol': 0.2, 'fatol': 10, 'disp': True})
 print(res.x)
 course = daq.getPath()
 
