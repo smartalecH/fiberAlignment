@@ -125,7 +125,8 @@ def getPosition():
 # Parameters: position_um (float, position in micrometers), channel (int, 1 to n).
 # Returns: None
 def setPosition(position_um, channel):
-    if position_um < 0:position_um = 0
+    if position_um < 0:
+        position_um = 0
         print "error: position < 0"
     inputShort = calculateDistanceShort(position_um, channel)
     if inputShort > hundredPercent: inputShort = hundredPercent
