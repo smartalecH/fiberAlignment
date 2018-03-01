@@ -7,14 +7,24 @@ import matplotlib.animation as animation
 from matplotlib.widgets import Button
 import GuiFunctions as gf
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 #3.2mw/1.42v
 #2.2535 mw/v
-#
+
+# A list for storing lists of our optimization path and values.
+path = []
+# uncomment the two below lines if you want to use the runChart function
+#fig = plt.figure()
+#ax1 = fig.add_subplot(1,1,1)
+
+# Function: surface_plot
+# Purpose: Given a matrix, convert it into a form that matplotlib knows how
+# to plot in 3d space as a surface.
+# Parameters: the matrix to be plotted (formatted as an x by z matrix, whose
+# values are the values of the surface at that point).
+# Returns: a tuple containing the figure, axis, and surface.
 # Surface plot code courtesy of CMCDragonkai, see
 # https://gist.github.com/CMCDragonkai/dd420c0800cba33142505eff5a7d2589
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-
 def surface_plot (matrix, **kwargs):
     # acquire the cartesian coordinate matrices from the matrix
     # x is cols, y is rows
@@ -23,9 +33,6 @@ def surface_plot (matrix, **kwargs):
     ax = fig.add_subplot(111, projection='3d')
     surf = ax.plot_surface(x, y, matrix, **kwargs)
     return (fig, ax, surf)
-
-#fig = plt.figure()
-#ax1 = fig.add_subplot(1,1,1)
 
 def animate(i):
     # Get x and y data.
@@ -72,22 +79,24 @@ def xzIntensity():
     gf.connect()
     square = 20 + 1
     xlist = np.linspace(0,20,square)
-    ylist = np.linspace(0,20,square)
-    zlist = np.zeros((square,square))
+    zlist = np.linspace(0,20,square)
+    ylist = np.zeros((square,square))
     sleep(2)
     for x in range (len(xlist)):
         gf.setPosition(xlist[x],1)
-        for y in range (len(ylist)):
-            gf.setPosition(ylist[y],3)
-            zlist[x,y] = getAverage()
+        for z in range (len(zlist)):
+            gf.setPosition(zlist[z],3)
+            sleep(.1)
+            ylist[x,z] = getAverage()
 
-    (fig, ax, surf) = surface_plot(zlist, cmap=cm.coolwarm)
+    (fig, ax, surf) = surface_plot(ylist, cmap=cm.coolwarm)
     fig.colorbar(surf)
-    ax.set_xlabel('X (um)')
-    ax.set_ylabel('Y (um)')
-    ax.set_zlabel('Z (mV)')
+    ax.set_xlabel('Z (um)')
+    ax.set_ylabel('X (um)')
+    ax.set_zlabel('magnitude (mV)')
     plt.show()
 
+# This function is a work in progress.
 def probability3d():
     gf.connect()
     cube = 5 + 1
@@ -114,20 +123,31 @@ def probability3d():
                 ax.scatter3D(xlist[x], ylist[y], zlist[z], marker="o", c='r')#, markersize=intensity)
 
     plt.show()
-	
+
+def getPath():
+    return path
+
+# Function: J
+# Purpose: Objective function for minimization
+# Parameters: An array of positions in n dimensions. Currently supports setting
+# the piezo controller's x and z dimensions only.
+# Returns: The negated average voltage of 100 samples, reading from the DAQ.
 def J(x):
-	# Channel 1 = x
-	# Channel 2 = y
-	# Channel 3 = z
-	gf.setPosition(x[0],1)
-	gf.setPosition(x[1],3)
-	sleep(0.1)
-	return getAverage()
+	# Channel 1 = x, Channel 2 = y, Channel 3 = z
+    gf.setPosition(x[0],1)
+    gf.setPosition(x[1],3)
+    # Wait for transients to disappear
+    sleep(0.1)
+    # Add this point to the path
+    path.append([x[0], x[1], getAverage()])
+    # Negate the result, since we have a minimizing algorithm
+    print getAverage()
+    return (-1) * getAverage()
 
 if __name__ == "__main__":
     #ani = animation.FuncAnimation(fig, animate, interval=20)
     #plt.show()
     #values = np.zeros((2000,2000))
     #print values
-    #xzIntensity()
-    probability3d()
+    xzIntensity()
+    #runChart()
