@@ -300,7 +300,7 @@ def animate(i):
     # Clear the figure, and plot the new data
     app.ax1.cla()
     # The plot:
-    lim = avg * 1.5
+    lim = 100 #avg * 1.5
     app.ax1.axis([0,100,0,lim])
     app.ax1.plot(x,y,'r-',x,z,'b-')
     app.ax1.set_ylabel('Voltage (mv)')

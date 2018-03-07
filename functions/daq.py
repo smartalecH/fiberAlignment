@@ -1,4 +1,4 @@
-import ctypes as ct
+#import ctypes as ct
 import numpy as np
 import nidaqmx
 from time import sleep
@@ -34,6 +34,10 @@ def surface_plot (matrix, **kwargs):
     surf = ax.plot_surface(x, y, matrix, **kwargs)
     return (fig, ax, surf)
 
+# Function: animate
+# Purpose: Produce a plot that has the same function as an oscilloscope screen.
+# Parameters: Auto handled by the matplotlib FuncAnimation function.
+# Returns: None
 def animate(i):
     # Get x and y data.
     x = np.array(np.linspace(0,100,100))
@@ -52,6 +56,11 @@ def animate(i):
     plt.title("DAQ Real-Time Measurements")
     plt.legend(['Measured voltage','Average = ' + str('{:.2f}'.format(avg)) + ' mV'], loc='upper left', bbox_to_anchor=(0.6,1))
 
+# Function: get100data
+# Purpose: Reads 100 samples from cDAQ1Mod1/ai0 at 10kHz sample rate. Stores
+# the results in an array.
+# Parameters: None
+# Returns: The array of 100 sample values.
 def get100data():
     with nidaqmx.Task() as task:
         # Configure task
@@ -61,20 +70,40 @@ def get100data():
         data = task.read(number_of_samples_per_channel=100)
         return data
 
+# Function: getAverage
+# Purpose: Return the average value of 100 samples read from the DAQ. Automatically
+# calls get100data().
+# Parameters: None
+# Returns: A value, the average of 100 samples.
 def getAverage():
     a = np.array(get100data())
     avg = np.mean(a) * 1000
     return avg
 
+# THIS FUNCTION IS NOT YET COMPLETE
+# Function: calcPercent
+# Purpose:
+# Parameters:
+# Returns:
 def calcPercent():
     avg = getAverate()
     percent = 2.2535*avg/3.2
     return percent
 
+# Function: runChart
+# Purpose: Run the o-scope chart directly from the daq script; no need to
+# open sampleGUI.
+# Parameters: None
+# Returns: None; opens a new window displaying a real-time updating chart.
 def runChart():
     ani = animation.FuncAnimation(fig, animate, interval=20)
     plt.show()
 
+# Function: xzIntensity
+# Purpose: Creates a surface plot of voltage intensity as the fibers'
+# position varies over the xz plane.
+# Parameters: None
+# Returns: None. Automatically opens a new window with the plot.
 def xzIntensity():
     gf.connect()
     square = 20 + 1
@@ -96,6 +125,10 @@ def xzIntensity():
     ax.set_zlabel('magnitude (mV)')
     plt.show()
 
+# Function: probability3d
+# Purpose: I've given up on this function.
+# Parameters:
+# Returns:
 # This function is a work in progress.
 def probability3d():
     gf.connect()
@@ -124,6 +157,13 @@ def probability3d():
 
     plt.show()
 
+# Function: getPath
+# Purpose: return the array stored within daq that is called "path". It is an
+# array of arrays; each entry represents another n-dimension reading
+# (currently x,y,voltage).
+# Parameters: None
+# Returns: An array of arrays containing, sequentially, the path taken during
+# the optimzation process.
 def getPath():
     return path
 
