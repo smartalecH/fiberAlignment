@@ -176,13 +176,28 @@ class simpleGUI_tk(Tkinter.Tk):
         self.statusLbl.grid(column=1, row=6, sticky='W')
         self.status = Tkinter.Label(self, text="READY")
         self.status.grid(column=2, row=6, sticky='EW')
+    # OPEN GRAPH BUTTON
+        self.oscopeBtn = Tkinter.Button(self, text="Start Oscilloscope", command= lambda: openScope(self))
+        self.oscopeBtn.grid(column=3, row=6, sticky='EW')
     # GRAPH
-        self.fig = plt.figure()
-        self.ax1 = self.fig.add_subplot(1,1,1)
-        #self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
-        self.canvas = FigureCanvasTkAgg(self.fig, self)
-        self.canvas.show()
-        self.canvas.get_tk_widget().grid(column=10, row=0, rowspan=7, sticky='EW')
+        #self.fig = plt.figure()
+        #self.ax1 = self.fig.add_subplot(1,1,1)
+        ##self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
+        #self.canvas = FigureCanvasTkAgg(self.fig, self)
+        #self.canvas.show()
+        #self.canvas.get_tk_widget().grid(column=10, row=0, rowspan=7, sticky='EW')
+
+def openScope(parent):
+    t = Tkinter.Toplevel(parent)
+    t.title("Oscilloscope")
+    t.fig = plt.figure()
+    t.ax1 = t.fig.add_subplot(1,1,1)
+    #self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
+    t.canvas = FigureCanvasTkAgg(t.fig, t)
+    t.canvas.show()
+    t.canvas.get_tk_widget().grid(column=0, row=0, sticky='EW')
+    ani = animation.FuncAnimation(t.fig, animate, interval=100)
+
 # Function: on_closing
 # Purpose: This is invoked when the window is closed to end the connection with the controller
 # Parameters: None
@@ -356,5 +371,5 @@ if __name__ == "__main__":
     app.protocol("WM_DELETE_WINDOW", on_closing)
     # Update the position text boxes
     updatePosition()
-    ani = animation.FuncAnimation(app.fig, animate, interval=100)
+    #ani = animation.FuncAnimation(app.fig, animate, interval=100)
     app.mainloop()
