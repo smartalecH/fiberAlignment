@@ -17,15 +17,16 @@ paramsets = uc480.list_instruments()
 
 camera = instrument(paramsets[0])
 
-#this loop is suposed to update the image live but
-#right now it only updates when the image is closed needs fixed
-
+#initialize live camera feed
 camera.start_live_video()
+#this loop updates the image being shown
 while camera.wait_for_frame():
     frame = camera.latest_frame()
     cv2.imshow('frame',frame)
-
+    #wait 100 ms
     cv2.waitKey(100)
+    #checks to see if the window was closed if closed exit loop to stop image from refreshing
+    #without this the loop will automatically open a new window
     if cv2.getWindowProperty('frame',cv2.WND_PROP_VISIBLE) < 1: break
 #I down loaded the source files for instrumental from git hum they are at C:\Users\ecestudent\Downloads\Instrumental-master
 cv2.destroyAllWindows()
