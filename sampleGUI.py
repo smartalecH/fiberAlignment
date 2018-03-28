@@ -10,7 +10,7 @@ from functions import daq
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-matplotlib.use("TkAgg")
+#matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 
@@ -180,12 +180,12 @@ class simpleGUI_tk(Tkinter.Tk):
         self.oscopeBtn = Tkinter.Button(self, text="Start Oscilloscope", command= lambda: openScope(self))
         self.oscopeBtn.grid(column=3, row=6, sticky='EW')
     # GRAPH
-        #self.fig = plt.figure()
-        #self.ax1 = self.fig.add_subplot(1,1,1)
-        ##self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
-        #self.canvas = FigureCanvasTkAgg(self.fig, self)
-        #self.canvas.show()
-        #self.canvas.get_tk_widget().grid(column=10, row=0, rowspan=7, sticky='EW')
+        self.fig = plt.figure()
+        self.ax1 = self.fig.add_subplot(1,1,1)
+        #self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
+        self.canvas = FigureCanvasTkAgg(self.fig, self)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().grid(column=10, row=0, rowspan=7, sticky='EW')
 
 def openScope(parent):
     t = Tkinter.Toplevel(parent)
@@ -194,7 +194,7 @@ def openScope(parent):
     t.ax1 = t.fig.add_subplot(1,1,1)
     #self.ani = animation.FuncAnimation(self.fig, animate, interval=20)
     t.canvas = FigureCanvasTkAgg(t.fig, t)
-    t.canvas.show()
+    t.canvas.draw()
     t.canvas.get_tk_widget().grid(column=0, row=0, sticky='EW')
     ani = animation.FuncAnimation(t.fig, animate, interval=100)
 
@@ -308,9 +308,9 @@ def updatePosition():
 def animate(i):
     # Get x and y data.
     x = np.array(np.linspace(0,100,100))
-    y = np.array(daq.get100data()) * 1000
+    y = np.array(daq.get100data()) * 1000 #/43
     # Get the average value
-    avg = np.mean(y) / 43
+    avg = np.mean(y) #/ 43
     z = np.full((100,1), avg)
     # Clear the figure, and plot the new data
     app.ax1.cla()
@@ -371,5 +371,5 @@ if __name__ == "__main__":
     app.protocol("WM_DELETE_WINDOW", on_closing)
     # Update the position text boxes
     updatePosition()
-    #ani = animation.FuncAnimation(app.fig, animate, interval=100)
+    ani = animation.FuncAnimation(app.fig, animate, interval=100)
     app.mainloop()
