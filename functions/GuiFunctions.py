@@ -35,10 +35,11 @@ def connect():
         #print "Time remaining: " + (str(wait)) + " seconds",
         #print "\r",
         #sleep(1)
-    print "\nComplete"
-    #setPosition(10, 1)
-    #setPosition(10, 2)
-    #setPosition(10, 3)
+    #print "\nComplete"
+    sleep(1)
+    setPosition(10, 1)
+    setPosition(10, 2)
+    setPosition(10, 3)
 
 # Function: disconnect
 # Purpose: disconnects the control from the computer so it no longer takes commands

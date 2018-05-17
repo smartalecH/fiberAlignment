@@ -14,8 +14,8 @@ from matplotlib import cm
 # A list for storing lists of our optimization path and values.
 path = []
 # uncomment the two below lines if you want to use the runChart function
-#fig = plt.figure()
-#ax1 = fig.add_subplot(1,1,1)
+fig = plt.figure()
+ax1 = fig.add_subplot(1,1,1)
 
 # Function: surface_plot
 # Purpose: Given a matrix, convert it into a form that matplotlib knows how
@@ -48,8 +48,8 @@ def animate(i):
     # Clear the figure, and plot the new data
     ax1.cla()
     # The plot:
-    #lim = avg * 1.5
-    #plt.axis([0,1000,0,lim])
+    lim = avg * 1.5
+    plt.axis([0,100,0,lim])
     ax1.plot(x,y,'r-',x,z,'b-')
     plt.ylabel('Voltage (mv)')
     plt.xlabel('Measurement #')
@@ -86,7 +86,7 @@ def getAverage():
 # Parameters:
 # Returns:
 def calcPercent():
-    avg = getAverate()
+    avg = getAverage()
     percent = 2.2535*avg/3.2
     return percent
 
