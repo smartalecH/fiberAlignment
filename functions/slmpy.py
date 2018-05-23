@@ -115,7 +115,7 @@ class SLMdisplay:
         self.vt.frame.AddPendingEvent(event)
 
     def close(self):
-        self.vt.frame.Exit()
+        self.vt.frame.Close()
 
 class videoThread(threading.Thread):
     """Run the MainLoop as a thread. Access the frame with self.frame."""
