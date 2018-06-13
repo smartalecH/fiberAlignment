@@ -8,14 +8,18 @@ from matplotlib.widgets import Button
 import GuiFunctions as gf
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+import sys
+
+#maximize imports
+from scipy.optimize import minimize
+# Imports for plotting path
+#import matplotlib as mpl
 #3.2mw/1.42v
 #2.2535 mw/v
 
 # A list for storing lists of our optimization path and values.
 path = []
 # uncomment the two below lines if you want to use the runChart function
-fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
 
 # Function: surface_plot
 # Purpose: Given a matrix, convert it into a form that matplotlib knows how
@@ -124,6 +128,8 @@ def xzIntensity():
     ax.set_ylabel('X (um)')
     ax.set_zlabel('magnitude (mV)')
     plt.show()
+    fig.canvas.manager.window.activateWindow()
+    fig.canvas.manager.window.raise_()
 
 # Function: probability3d
 # Purpose: I've given up on this function.
@@ -184,10 +190,61 @@ def J(x):
     print getAverage()
     return (-1) * getAverage()
 
+# Function: get100data
+# Purpose: Reads 100 samples from cDAQ1Mod1/ai0 at 10kHz sample rate. Stores
+# the results in an array.
+# Parameters: None
+# Returns: The array of 100 sample values.
+def getTimedData(samplerate, sampletime):
+    with nidaqmx.Task() as task:
+        # Configure task
+        task.ai_channels.add_ai_voltage_chan("cDAQ1Mod1/ai0")
+        task.timing.cfg_samp_clk_timing(samplerate, samps_per_chan = samplerate * sampletime)
+        # Read the data
+        data = task.read(number_of_samples_per_channel=samplerate * sampletime)
+        mean = np.mean(data)
+        return mean
+
+def maximize():
+    x0 = np.array([10,10])
+    gf.connect()
+    sleep(3) # Gives piezo enough time to initialize
+    res = minimize(J, x0, method='nelder-mead', options={'xatol': 0.2, 'fatol': 10, 'disp': True})
+    print(res.x)
+    course = getPath()
+
+    # Plot the course
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    x = []
+    y = []
+    z = []
+    for i in range (len(course)):
+        x.append(course[i][0])
+        y.append(course[i][1])
+        z.append(course[i][2])
+    ax.plot(x, y, z, label='Voltage along path')
+    ax.legend()
+    ax.set_xlabel('X (um)')
+    ax.set_ylabel('Z (um)')
+    ax.set_zlabel('Magnitude (mV)')
+
+    plt.show()
+
 if __name__ == "__main__":
-    #ani = animation.FuncAnimation(fig, animate, interval=20)
-    #plt.show()
+    if sys.argv[1] == "intensity":
+        xzIntensity()
+    elif sys.argv[1] == "voltage":
+        print (getTimedData(8000, 1))
+    elif sys.argv[1] == "maximize":
+        maximize()
+    elif sys.argv[1] == "scope":
+        fig = plt.figure()
+        ax1 = fig.add_subplot(1,1,1)
+        ani = animation.FuncAnimation(fig, animate, interval=20)
+        plt.show()
+        runChart()
+    else:
+        xzIntensity()
     #values = np.zeros((2000,2000))
     #print values
-    xzIntensity()
-    #runChart()
