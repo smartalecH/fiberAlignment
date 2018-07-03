@@ -231,8 +231,18 @@ def maximize():
 
     plt.show()
 
+def showHelp():
+    print("----------DAQ Help----------")
+    print("This program has the following functions, taken as command line arguments:")
+    print("- intensity (creates a surface plot showing the voltage after scanning the surface)")
+    print("- voltage (instantaneous voltage measurement)")
+    print("- maximize (moves the stage to the location of highest voltage)")
+    print("- scope (opens a simple digital oscilloscope)")
+
 if __name__ == "__main__":
-    if sys.argv[1] == "intensity":
+    if sys.argv[1] == "help":
+        showHelp()
+    elif sys.argv[1] == "intensity":
         xzIntensity()
     elif sys.argv[1] == "voltage":
         print (getTimedData(8000, 1))
