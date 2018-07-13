@@ -108,8 +108,8 @@ def runChart():
 # position varies over the xz plane.
 # Parameters: None
 # Returns: None. Automatically opens a new window with the plot.
-def xzIntensity():
-    gf.connect()
+def xzIntensity(which="primary"):
+    gf.connect(which)
     square = 20 + 1
     xlist = np.linspace(0,20,square)
     zlist = np.linspace(0,20,square)
@@ -205,9 +205,9 @@ def getTimedData(samplerate, sampletime):
         mean = np.mean(data)
         return mean
 
-def maximize():
+def maximize(which="primary"):
     x0 = np.array([10,10])
-    gf.connect()
+    gf.connect(which)
     sleep(3) # Gives piezo enough time to initialize
     res = minimize(J, x0, method='nelder-mead', options={'xatol': 0.2, 'fatol': 10, 'disp': True})
     print(res.x)
@@ -232,29 +232,51 @@ def maximize():
     plt.show()
 
 def showHelp():
-    print("----------DAQ Help----------")
+    print("----------DAQ Program Help----------")
     print("This program has the following functions, taken as command line arguments:")
-    print("- intensity (creates a surface plot showing the voltage after scanning the surface)")
-    print("- voltage (instantaneous voltage measurement)")
-    print("- maximize (moves the stage to the location of highest voltage)")
-    print("- scope (opens a simple digital oscilloscope)")
+    print(" - intensity (creates a surface plot showing the voltage after scanning the surface)")
+    print(" - voltage (instantaneous voltage measurement)")
+    print(" - maximize (moves the stage to the location of highest voltage)")
+    print(" - scope (opens a simple digital oscilloscope)")
+    print(" - InitStage (zeros all piezo channels and centers them)")
+    print(" - center (centers all piezo channels)")
+
+def whichpiezo():
+    which = raw_input("Primary or secondary controller? Type 'p' or 's': ")
+    if which == "s": return "secondary"
+    else: return "primary"
 
 if __name__ == "__main__":
-    if sys.argv[1] == "help":
+    try:
+        kargs = sys.argv[1]
+        if kargs == "help":
+            showHelp()
+        elif kargs == "intensity":
+            xzIntensity(whichpiezo())
+        elif kargs == "voltage":
+            print (getTimedData(8000, 1))
+        elif kargs == "maximize":
+            maximize(whichpiezo())
+        elif kargs == "scope":
+            fig = plt.figure()
+            ax1 = fig.add_subplot(1,1,1)
+            ani = animation.FuncAnimation(fig, animate, interval=20)
+            plt.show()
+            runChart()
+        elif kargs == "InitStage":
+            gf.connect(whichpiezo())
+            sleep(1)
+            gf.zero(1)
+            gf.zero(2)
+            gf.zero(3)
+            sleep(25)
+            gf.center()
+        elif kargs == "center":
+            gf.connect(whichpiezo())
+        else:
+            print(sys.argv[1] + " is not a valid command. The following are legal commands: \n")
+            showHelp()
+    except IndexError:
         showHelp()
-    elif sys.argv[1] == "intensity":
-        xzIntensity()
-    elif sys.argv[1] == "voltage":
-        print (getTimedData(8000, 1))
-    elif sys.argv[1] == "maximize":
-        maximize()
-    elif sys.argv[1] == "scope":
-        fig = plt.figure()
-        ax1 = fig.add_subplot(1,1,1)
-        ani = animation.FuncAnimation(fig, animate, interval=20)
-        plt.show()
-        runChart()
-    else:
-        xzIntensity()
     #values = np.zeros((2000,2000))
     #print values

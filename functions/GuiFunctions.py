@@ -3,6 +3,8 @@ import numpy
 from time import sleep
 import os
 serialNumber = ct.c_char_p('71874833')
+serialNumberA = ct.c_char_p('71874833')
+serialNumberB = ct.c_char_p('71854093')
 #adds location of the dlls to the system path so that this program can run on any machine
 dir_path = os.path.dirname(os.path.realpath(__file__))
 dll_location = dir_path + "\\dll"
@@ -19,7 +21,12 @@ channel3 = ct.c_short(3)
 # Parameters: None
 # Returns: None, but prints either "successfully connected" or "error connecting: "
 # with an error code to the console.
-def connect():
+def connect(which="primary"):
+    global serialNumber
+    if which == "primary":
+        serialNumber = serialNumberA
+    elif which == "secondary":
+        serialNumber = serialNumberB
     result = piezoDll.PBC_Open(serialNumber)
     if result != 0: print "error connecting: " + str(result)
     else: print "Successfully Connected"
@@ -37,9 +44,7 @@ def connect():
         #sleep(1)
     #print "\nComplete"
     sleep(1)
-    setPosition(10, 1)
-    setPosition(10, 2)
-    setPosition(10, 3)
+    center()
 
 # Function: disconnect
 # Purpose: disconnects the control from the computer so it no longer takes commands
@@ -48,7 +53,16 @@ def connect():
 def disconnect():
     piezoDll.PBC_Disconnect(serialNumber)
     piezoDll.PBC_Close(serialNumber)
-    print "disconnect"
+    #print "disconnect"
+
+# Function: center
+# Purpose: center all channels to mid range
+# Parameteres: None
+# Returns: None
+def center():
+    setPosition(10, 1)
+    setPosition(10, 2)
+    setPosition(10, 3)
 
 # Function: stepUp
 # Purpose: increase the position of one channel by a specified step distance
