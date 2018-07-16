@@ -207,7 +207,7 @@ def getTimedData(samplerate, sampletime):
 
 def maximize(which="primary"):
     x0 = np.array([10,10])
-    gf.connect(which)
+    gf.connect(which, "xz")
     sleep(3) # Gives piezo enough time to initialize
     res = minimize(J, x0, method='nelder-mead', options={'xatol': 0.2, 'fatol': 10, 'disp': True})
     print(res.x)

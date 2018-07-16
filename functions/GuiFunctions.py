@@ -21,7 +21,7 @@ channel3 = ct.c_short(3)
 # Parameters: None
 # Returns: None, but prints either "successfully connected" or "error connecting: "
 # with an error code to the console.
-def connect(which="primary"):
+def connect(which="primary", centralize="all"):
     global serialNumber
     if which == "primary":
         serialNumber = serialNumberA
@@ -44,7 +44,10 @@ def connect(which="primary"):
         #sleep(1)
     #print "\nComplete"
     sleep(1)
-    center()
+    if centralize == "xz":
+        setPosition(10, 1)
+        setPosition(10, 3)
+    else: center()
 
 # Function: disconnect
 # Purpose: disconnects the control from the computer so it no longer takes commands
