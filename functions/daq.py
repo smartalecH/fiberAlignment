@@ -242,9 +242,14 @@ def showHelp():
     print(" - center (centers all piezo channels)")
 
 def whichpiezo():
-    which = raw_input("Primary or secondary controller? Type 'p' or 's': ")
-    if which == "s": return "secondary"
-    else: return "primary"
+    try:
+        args = sys.argv[2]
+        if args == "s": return "secondary"
+        else: return "primary"
+    except IndexError:
+        which = raw_input("Primary or secondary controller? Type 'p' or 's': ")
+        if which == "s": return "secondary"
+        else: return "primary"
 
 if __name__ == "__main__":
     try:
