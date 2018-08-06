@@ -47,7 +47,8 @@ def connect(which="primary", centralize="all"):
     if centralize == "xz":
         setPosition(10, 1)
         setPosition(10, 3)
-    else: center()
+    elif centralize == "all":
+        center()
 
 # Function: disconnect
 # Purpose: disconnects the control from the computer so it no longer takes commands

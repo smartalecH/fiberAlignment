@@ -251,6 +251,22 @@ def whichpiezo():
         if which == "s": return "secondary"
         else: return "primary"
 
+def step():
+    try:
+        gf.connect(whichpiezo(), centralize="none")
+        channel = int(sys.argv[3])
+        begin = float(sys.argv[4])
+        end = float(sys.argv[5])
+        step = float(sys.argv[6])
+        print ("Working: ")
+        while begin < end:
+            print(begin)
+            gf.setPosition(begin, channel)
+            begin += step
+            sleep(1)
+    except IndexError:
+        print("Incorrect number of arguments. Format (all but first as int): CONTROLLER(p or s) CHANNEL BEGIN END STEP")
+
 if __name__ == "__main__":
     try:
         kargs = sys.argv[1]
@@ -278,6 +294,8 @@ if __name__ == "__main__":
             gf.center()
         elif kargs == "center":
             gf.connect(whichpiezo())
+        elif kargs == "step":
+            step()
         else:
             print(sys.argv[1] + " is not a valid command. The following are legal commands: \n")
             showHelp()
