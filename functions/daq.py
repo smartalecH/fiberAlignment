@@ -240,6 +240,9 @@ def showHelp():
     print(" - scope (opens a simple digital oscilloscope)")
     print(" - InitStage (zeros all piezo channels and centers them)")
     print(" - center (centers all piezo channels)")
+    print(" - step (steps one channel in the positive direction from a start value < end value in specified increments)")
+    print(" \t Format: step  WHICH_PIEZO  CHANNEL(INT)  BEGIN  END  STEP")
+    print(" - custom (scans a face in the xz plane in specified increments, must be hard coded -- no command line arguments available)")
 
 def whichpiezo():
     try:
@@ -266,6 +269,36 @@ def step():
             sleep(1)
     except IndexError:
         print("Incorrect number of arguments. Format (all but first as int): CONTROLLER(p or s) CHANNEL BEGIN END STEP")
+
+def custom():
+    gf.connect("secondary", centralize="none")
+    # scan surface: xz
+    xstart = 9
+    xend = 11.5
+    xstep = 0.15
+    zstart = 9.5
+    zend = 12
+    zstep = 0.15
+    # z direction: up  (+1) vs down (-1), alternating so as to not jump the stage
+    zdir = 1
+    xpos = xstart
+    zpos = zstart
+    while xpos < (xend + xstep):
+        gf.setPosition(xpos, 1)
+        xpos += xstep
+        if zdir > 0:
+            while zpos < (zend):
+                gf.setPosition(zpos, 3)
+                zpos += zstep
+                sleep(1)
+            zdir = -1
+        elif zdir < 0:
+            while zpos > (zstart):
+                gf.setPosition(zpos, 3)
+                zpos -= zstep
+                sleep(1)
+            zdir = 1
+
 
 if __name__ == "__main__":
     try:
@@ -296,6 +329,8 @@ if __name__ == "__main__":
             gf.connect(whichpiezo())
         elif kargs == "step":
             step()
+        elif kargs == "custom":
+            custom()
         else:
             print(sys.argv[1] + " is not a valid command. The following are legal commands: \n")
             showHelp()
